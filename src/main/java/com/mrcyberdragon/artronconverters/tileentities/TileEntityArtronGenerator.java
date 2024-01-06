@@ -1,5 +1,6 @@
 package com.mrcyberdragon.artronconverters.tileentities;
 
+import com.mrcyberdragon.artronconverters.config.ArtronConverterConfig;
 import com.mrcyberdragon.artronconverters.init.ModEnergy;
 import com.mrcyberdragon.artronconverters.init.SoundInit;
 import com.mrcyberdragon.artronconverters.init.TileEntityInit;
@@ -23,7 +24,10 @@ import java.util.Random;
 
 public class TileEntityArtronGenerator extends TileEntity implements ITickableTileEntity {
 
-    private ModEnergy energy = new ModEnergy(100000, 4096, 100000);
+    private int EnergyCapacity = ArtronConverterConfig.generator_capacity.get();
+    private int ChargeRate = ArtronConverterConfig.generator_charge.get();
+    private int ConversionAmount = ArtronConverterConfig.generator_usage.get();
+    private ModEnergy energy = new ModEnergy(EnergyCapacity, ChargeRate, EnergyCapacity);
     private LazyOptional<EnergyStorage> energyHolder = LazyOptional.of(() -> energy);
     private int tick = 7;
     private boolean energyFull = false;
@@ -41,7 +45,6 @@ public class TileEntityArtronGenerator extends TileEntity implements ITickableTi
             if (tile == null) return;
 
         if(tile.getArtron() < tile.getMaxArtron()) {
-            int ConversionAmount = 25000;
             if (!world.isBlockPowered(this.getPos())) {
                 if (0 < tick && tick <= 7) {
                     tick--;
@@ -53,7 +56,7 @@ public class TileEntityArtronGenerator extends TileEntity implements ITickableTi
                         world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
                         energy.extractEnergy(ConversionAmount, false);
                         if (!world.isRemote()) {
-                            world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 1F, 1F);
+                            this.world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 1F, 1F);
                         }
                         tick = 7;
                     }

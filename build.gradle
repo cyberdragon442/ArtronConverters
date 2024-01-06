@@ -16,7 +16,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.1'
+version = '1.2'
 group = 'com.mrcyberdragon.artrongen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'artrongen'
 
@@ -55,7 +55,9 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 artrongen {
@@ -73,7 +75,9 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 artrongen {
@@ -91,7 +95,9 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', 'artrongen', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
@@ -117,7 +123,7 @@ repositories{
         // location of the maven that hosts IE files
         url "https://maven.blamejared.com/"
     }
-    maven { url "https://maven.tehnut.info" }
+    maven { url = "https://api.modrinth.com/maven" }
     maven { url = 'https://libraries.minecraft.net/' } //Temporary fix for forge maven change
     mavenCentral()
     maven { url = 'https://maven.minecraftforge.net/' }
@@ -136,10 +142,9 @@ dependencies {
     compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:${ie_version}")
     runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:${ie_version}")
 
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    implementation fg.deobf("maven.modrinth:jade:2.8.3")
 
-    implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:1.16-SNAPSHOT')
+    implementation fg.deobf('com.gitlab.Spectre0987:TardisMod:1.5.4')
 
 
 

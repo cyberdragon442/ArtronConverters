@@ -1,5 +1,6 @@
 package com.mrcyberdragon.artronconverters.tileentities;
 
+import com.mrcyberdragon.artronconverters.config.ArtronConverterConfig;
 import com.mrcyberdragon.artronconverters.init.ModEnergy;
 import com.mrcyberdragon.artronconverters.init.SoundInit;
 import com.mrcyberdragon.artronconverters.init.TileEntityInit;
@@ -24,7 +25,9 @@ import java.util.Random;
 
 public class TileEntityArtronConverter extends TileEntity implements ITickableTileEntity {
 
-    private ModEnergy energy = new ModEnergy(100000, 1000, 1000);
+    private int Buffer= ArtronConverterConfig.converter_capacity.get();
+    private int GenerationRate=ArtronConverterConfig.converter_generation.get();
+    private ModEnergy energy = new ModEnergy(Buffer, GenerationRate, Buffer);
     private LazyOptional<EnergyStorage> energyHolder = LazyOptional.of(() -> energy);
     private int tick = 7;
     private long time1 = 0;
@@ -55,7 +58,7 @@ public class TileEntityArtronConverter extends TileEntity implements ITickableTi
                     tick=7;
                 }
                 if (tile != null && tile.getArtron() > 1 && energy.getEnergyStored() < (energy.getMaxEnergyStored()-999)) {
-                    cap.receiveEnergy(1000, false);
+                    cap.receiveEnergy(GenerationRate, false);
                     ArtronUse use = tile.getOrCreateArtronUse(ArtronUse.ArtronType.CONVERTER);
                     use.setArtronUsePerTick(1);
                     use.setTicksToDrain(1);
@@ -64,7 +67,7 @@ public class TileEntityArtronConverter extends TileEntity implements ITickableTi
                         time1=0;
                         time2=0;
                         if (!world.isRemote()) {
-                            world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 1F, 1F);
+                            this.world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 1F, 1F);
                         }
                         world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
                     }
@@ -84,8 +87,8 @@ public class TileEntityArtronConverter extends TileEntity implements ITickableTi
                     TileEntity te = world.getTileEntity(getPos().offset(dir));
                     if (te != null) {
                         te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).ifPresent(power -> {
-                            if(cap.getEnergyStored()>=1000) {
-                                cap.extractEnergy(power.receiveEnergy(1000, false), false);
+                            if(cap.getEnergyStored()>=GenerationRate) {
+                                cap.extractEnergy(power.receiveEnergy(GenerationRate, false), false);
                             }
                         });
                     }
