@@ -16,4 +16,5 @@ public class ItemInit {
     public static final RegistryObject<BlockItem> UNATTUNED_GENERATOR = ITEMS.register("unattuned_generator", () -> new BlockItem(BlockInit.UNATTUNED_GENERATOR.get(), new Item.Properties().group(TItemGroups.MAINTENANCE)));
     public static final RegistryObject<BlockItem> ARTRON_CONVERTER = ITEMS.register("artron_converter", () -> new BlockItem(BlockInit.ARTRON_CONVERTER.get(), new Item.Properties().group(TItemGroups.MAINTENANCE)));
     public static final RegistryObject<BlockItem> UNATTUNED_CONVERTER = ITEMS.register("unattuned_converter", () -> new BlockItem(BlockInit.UNATTUNED_CONVERTER.get(), new Item.Properties().group(TItemGroups.MAINTENANCE)));
+    public static final RegistryObject<BlockItem> ARTRON_CHARGER = ITEMS.register("artron_charger", () -> new BlockItem(BlockInit.ARTRON_CHARGER.get(), new Item.Properties().group(TItemGroups.MAINTENANCE)));
 }

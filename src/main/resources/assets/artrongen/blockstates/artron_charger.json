@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "artrongen:block/artron_charger" }
+  }
+}

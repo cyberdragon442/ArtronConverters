@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " a ",
+    "dbd",
+    " c "
+  ],
+  "key": {
+    "a": {
+      "item": "tardis:artron_collector"
+    },
+    "b": {
+      "item": "tardis:subsystem/fluid_link"
+    },
+    "c": {
+      "item": "artrongen:unattuned_generator"
+    },
+    "d": {
+      "item": "tardis:artron_pylon"
+    }
+  },
+  "result": {
+    "item": "artrongen:artron_charger"
+  }
+}

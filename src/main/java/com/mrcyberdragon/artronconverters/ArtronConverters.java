@@ -42,15 +42,26 @@ public class ArtronConverters
         int ChargeRate=ArtronConverterConfig.generator_charge.get();
         int GenRate=ArtronConverterConfig.converter_generation.get();
         int GenBuffer=ArtronConverterConfig.converter_capacity.get();
+        int ChargerCapacity=ArtronConverterConfig.charger_capacity.get();
+        int ChargerMaxFE=ArtronConverterConfig.charger_charge.get();
+        int ChargerConversion=ArtronConverterConfig.charger_usage.get();
+        float ChargerAU=ArtronConverterConfig.charger_max_artron.get();
+        float ChargingRate=ArtronConverterConfig.charger_rate.get();
 
-        if((ConversionAmount>EnergyCapacity)){
-            throw new IllegalArgumentException("Config Error! Energy buffer must be greater than conversion/usage rate!");
+        if(ConversionAmount>EnergyCapacity){
+            throw new IllegalArgumentException("Config Error! Energy buffer must be greater than or equal to conversion/usage rate!");
+        }
+        if(ChargerConversion>ChargerCapacity){
+            throw new IllegalArgumentException("Config Error! Energy buffer must be greater than or equal to conversion/usage rate!");
         }
         if(GenRate>GenBuffer){
-            throw new IllegalArgumentException("Config Error! Energy buffer must be greater than generation rate!");
+            throw new IllegalArgumentException("Config Error! Energy buffer must be greater than or equal to generation rate!");
         }
-        if(EnergyCapacity==0||ConversionAmount<=0||ChargeRate<=0||GenRate<=0||GenBuffer<=0){
-            throw new IllegalArgumentException("Config values must be a positive integer!");
+        if(ChargingRate>ChargerAU){
+            throw new IllegalArgumentException("Config Error! Artron buffer must be be greater then or equal to Artron charge rate!");
+        }
+        if(EnergyCapacity<=0||ConversionAmount<=0||ChargeRate<=0||GenRate<=0||GenBuffer<=0||ChargerCapacity<=0||ChargerMaxFE<=0||ChargerConversion<=0||ChargerAU<=0||ChargingRate<=0){
+            throw new IllegalArgumentException("Config Error! Config values must be a positive integer or float!");
         }
     }
 

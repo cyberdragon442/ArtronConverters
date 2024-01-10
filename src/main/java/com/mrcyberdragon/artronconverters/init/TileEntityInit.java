@@ -2,6 +2,7 @@ package com.mrcyberdragon.artronconverters.init;
 
 import com.google.common.base.Supplier;
 import com.mrcyberdragon.artronconverters.ArtronConverters;
+import com.mrcyberdragon.artronconverters.tileentities.TileEntityArtronCharger;
 import com.mrcyberdragon.artronconverters.tileentities.TileEntityArtronConverter;
 import com.mrcyberdragon.artronconverters.tileentities.TileEntityArtronGenerator;
 import net.minecraft.block.Block;
@@ -25,6 +26,7 @@ public class TileEntityInit {
 
     public static final RegistryObject<TileEntityType<TileEntityArtronGenerator>> ARTRON_GENERATOR = TILES.register("artron_generator", () -> registerTiles(TileEntityArtronGenerator::new, BlockInit.ARTRON_GENERATOR.get()));
     public static final RegistryObject<TileEntityType<TileEntityArtronConverter>> ARTRON_CONVERTER = TILES.register("artron_converter", () -> registerTiles(TileEntityArtronConverter::new, BlockInit.ARTRON_CONVERTER.get()));
+    public static final RegistryObject<TileEntityType<TileEntityArtronCharger>> ARTRON_CHARGER = TILES.register("artron_charger", () -> registerTiles(TileEntityArtronCharger::new, BlockInit.ARTRON_CHARGER.get()));
 
     private static <T extends TileEntity> TileEntityType<T> registerTiles(Supplier<T> tile, Block... validBlock) {
         TileEntityType<T> type = TileEntityType.Builder.create(tile, validBlock).build(null);
