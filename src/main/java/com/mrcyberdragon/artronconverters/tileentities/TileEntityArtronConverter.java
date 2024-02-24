@@ -35,11 +35,11 @@ public class TileEntityArtronConverter extends TileEntity implements ITickableTi
     private boolean energyFull = false;
     private boolean spawnParticle=false;
 
+    private String TARDIS_ID;
+    private String TARDIS_NAME;
     private ConsoleTile tile;
 
-    public TileEntityArtronConverter(){
-        super(TileEntityInit.ARTRON_CONVERTER.get());
-    }
+    public TileEntityArtronConverter(){ super(TileEntityInit.ARTRON_CONVERTER.get()); }
 
     @Override
     public void tick(){
@@ -57,19 +57,21 @@ public class TileEntityArtronConverter extends TileEntity implements ITickableTi
                     time2=world.getGameTime();
                     tick=7;
                 }
-                if (tile != null && tile.getArtron() > 1 && energy.getEnergyStored() < (energy.getMaxEnergyStored()-999)) {
-                    cap.receiveEnergy(GenerationRate, false);
-                    ArtronUse use = tile.getOrCreateArtronUse(ArtronUse.ArtronType.CONVERTER);
-                    use.setArtronUsePerTick(1);
-                    use.setTicksToDrain(1);
-                    spawnParticle=true;
-                    if ((time2-time1)>6) {
-                        time1=0;
-                        time2=0;
-                        if (!world.isRemote()) {
-                            this.world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 1F, 1F);
-                        }
-                        world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
+                if (tile != null && tile.getArtron() > 1 && energy.getEnergyStored() < (energy.getMaxEnergyStored()-GenerationRate)) {
+                    if(TARDIS_ID!=null&&TARDIS_ID.equals(tile.getWorld().getDimensionKey().getLocation().toString())) {
+                            cap.receiveEnergy(GenerationRate, false);
+                            ArtronUse use = tile.getOrCreateArtronUse(ArtronUse.ArtronType.CONVERTER);
+                            use.setArtronUsePerTick(1);
+                            use.setTicksToDrain(1);
+                            spawnParticle = true;
+                            if ((time2 - time1) > 6) {
+                                time1 = 0;
+                                time2 = 0;
+                                if (!world.isRemote()) {
+                                    this.world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 0.75F, 1F);
+                                }
+                                world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
+                            }
                     }
                 }
                 else {
@@ -120,6 +122,8 @@ public class TileEntityArtronConverter extends TileEntity implements ITickableTi
     public CompoundNBT write(CompoundNBT compound) {
         compound.putBoolean("particle",spawnParticle);
         compound.put("energy", energy.serializeNBT());
+        if(TARDIS_ID!=null)compound.putString("attuned_console",TARDIS_ID);
+        if(TARDIS_NAME!=null)compound.putString("tardis_name",TARDIS_NAME);
         return super.write(compound);
     }
 
@@ -127,7 +131,21 @@ public class TileEntityArtronConverter extends TileEntity implements ITickableTi
     public void read(BlockState state, CompoundNBT nbt) {
         energy.deserializeNBT(nbt.getCompound("energy"));
         this.spawnParticle= nbt.getBoolean("particle");
+        TARDIS_ID=nbt.getString("attuned_console");
+        TARDIS_NAME=nbt.getString("tardis_name");
         super.read(state, nbt);
+    }
+
+    public CompoundNBT saveToNbt(CompoundNBT compound) {
+        if(TARDIS_ID!=null)compound.putString("attuned_console",TARDIS_ID);
+        if(TARDIS_NAME!=null)compound.putString("tardis_name",TARDIS_NAME);
+        return compound;
+    }
+
+    public CompoundNBT loadFromNBT(CompoundNBT nbt){
+        TARDIS_ID=nbt.getString("attuned_console");
+        TARDIS_NAME=nbt.getString("tardis_name");
+        return nbt;
     }
 
     @Override

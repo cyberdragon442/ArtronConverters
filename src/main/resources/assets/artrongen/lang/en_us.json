@@ -8,5 +8,7 @@
   "tooltip.artron_converter.purpose": "Converts Artron Energy to Forge Energy.",
   "tooltip.artron_generator.redstone": "Redstone deactivates this machine.",
   "tooltip.artron_generator.attunable": "This block must be attuned in a Tardis Engine.",
-  "tooltip.artron_charger.purpose": "Charges Artron Batteries using FE power. Power input is on the bottom."
+  "tooltip.artron_charger.purpose": "Charges Artron Batteries using FE power. Power input is on the bottom.",
+  "tooltip.attunement_warning": "WARNING: This block has not been attuned properly and will not function!",
+  "block.security_warning": "WARNING: This block is not attuned to this TARDIS!"
 }

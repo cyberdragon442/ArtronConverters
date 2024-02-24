@@ -2,7 +2,7 @@
   "add_attunement_tags": true,
   "attunement_ticks": 18000,
   "input": {
-    "item": "artrongen:unattuned_generator"
+    "item": "artrongen:artron_generator"
   },
   "result": {
     "item": "artrongen:artron_generator"

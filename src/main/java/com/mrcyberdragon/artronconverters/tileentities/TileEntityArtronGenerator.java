@@ -33,6 +33,8 @@ public class TileEntityArtronGenerator extends TileEntity implements ITickableTi
     private boolean energyFull = false;
     private boolean spawnParticle=false;
 
+    private String TARDIS_ID;
+    private String TARDIS_NAME;
     private ConsoleTile tile;
 
     public TileEntityArtronGenerator(){
@@ -44,48 +46,48 @@ public class TileEntityArtronGenerator extends TileEntity implements ITickableTi
         this.getCapability(CapabilityEnergy.ENERGY).ifPresent(cap -> {
             if (tile == null) return;
 
-        if(tile.getArtron() < tile.getMaxArtron()) {
+        if(tile!=null&&tile.getArtron() < tile.getMaxArtron()) {
+            if(TARDIS_ID!=null&&TARDIS_ID.equals(tile.getWorld().getDimensionKey().getLocation().toString())){
             if (!world.isBlockPowered(this.getPos())) {
                 if (0 < tick && tick <= 7) {
                     tick--;
                 }
                 if (energy.getEnergyStored() >= ConversionAmount) {
                     if (tick == 0) {
-                        tile.setArtron(tile.getArtron()+1);
-                        spawnParticle=true;
+                        tile.setArtron(tile.getArtron() + 1);
+                        spawnParticle = true;
                         world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
                         energy.extractEnergy(ConversionAmount, false);
                         if (!world.isRemote()) {
-                            this.world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 1F, 1F);
+                            this.world.playSound(null, this.getPos(), SoundInit.ARTRON_GEN, SoundCategory.BLOCKS, 0.75F, 1F);
                         }
                         tick = 7;
                     }
-                }
-                else {
-                    if(energy.getEnergyStored()<energy.getMaxEnergyStored()) energyFull=false;
-                    if(tick==7) {
-                        if(!energyFull) {
-                            if(energy.getEnergyStored()==energy.getMaxEnergyStored()) energyFull=true;
+                } else {
+                    if (energy.getEnergyStored() < energy.getMaxEnergyStored()) energyFull = false;
+                    if (tick == 7) {
+                        if (!energyFull) {
+                            if (energy.getEnergyStored() == energy.getMaxEnergyStored()) energyFull = true;
                             world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
                             spawnParticle = false;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if (0 < tick && tick <= 7) {
                     tick--;
                 }
-                if(energy.getEnergyStored()<energy.getMaxEnergyStored()) energyFull=false;
-                if (tick==0) {
-                    if(!energyFull) {
-                        if(energy.getEnergyStored()==energy.getMaxEnergyStored()) energyFull=true;
+                if (energy.getEnergyStored() < energy.getMaxEnergyStored()) energyFull = false;
+                if (tick == 0) {
+                    if (!energyFull) {
+                        if (energy.getEnergyStored() == energy.getMaxEnergyStored()) energyFull = true;
                         world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
                         spawnParticle = false;
                     }
-                    tick=7;
+                    tick = 7;
                 }
             }
+        }
         }
         else {
             if (0 < tick && tick <= 7) {
@@ -111,6 +113,8 @@ public class TileEntityArtronGenerator extends TileEntity implements ITickableTi
     public CompoundNBT write(CompoundNBT compound) {
         compound.putBoolean("particle",spawnParticle);
         compound.put("energy", energy.serializeNBT());
+        if(TARDIS_ID!=null)compound.putString("attuned_console",TARDIS_ID);
+        if(TARDIS_NAME!=null)compound.putString("tardis_name",TARDIS_NAME);
         return super.write(compound);
     }
 
@@ -118,7 +122,21 @@ public class TileEntityArtronGenerator extends TileEntity implements ITickableTi
     public void read(BlockState state, CompoundNBT nbt) {
         energy.deserializeNBT(nbt.getCompound("energy"));
         this.spawnParticle= nbt.getBoolean("particle");
+        TARDIS_ID=nbt.getString("attuned_console");
+        TARDIS_NAME=nbt.getString("tardis_name");
         super.read(state, nbt);
+    }
+
+    public CompoundNBT saveToNbt(CompoundNBT compound) {
+        if(TARDIS_ID!=null)compound.putString("attuned_console",TARDIS_ID);
+        if(TARDIS_NAME!=null)compound.putString("tardis_name",TARDIS_NAME);
+        return compound;
+    }
+
+    public CompoundNBT loadFromNBT(CompoundNBT nbt){
+        TARDIS_ID=nbt.getString("attuned_console");
+        TARDIS_NAME=nbt.getString("tardis_name");
+        return nbt;
     }
 
     @Override

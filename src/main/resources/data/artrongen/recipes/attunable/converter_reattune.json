@@ -2,7 +2,7 @@
   "add_attunement_tags": true,
   "attunement_ticks": 3600,
   "input": {
-    "item": "artrongen:unattuned_converter"
+    "item": "artrongen:artron_converter"
   },
   "result": {
     "item": "artrongen:artron_converter"
